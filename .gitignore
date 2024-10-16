@@ -396,3 +396,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+AudioChapterSplitter/AudioChapterSplitter/Properties/launchSettings.json
