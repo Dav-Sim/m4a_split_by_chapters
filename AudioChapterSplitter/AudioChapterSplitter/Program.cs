@@ -16,7 +16,7 @@
             var path = args[0];
             string? directory = args.Length > 1 ? args[1] : null;
 
-            Console.WriteLine("Press Ctrl+C to cancel...");
+            Console.WriteLine("(Press Ctrl+C to cancel)");
             Console.CancelKeyPress += (sender, e) =>
             {
                 Console.WriteLine("Cancelling...");
