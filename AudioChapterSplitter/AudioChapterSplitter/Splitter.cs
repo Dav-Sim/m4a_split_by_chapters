@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
-using System.Text.RegularExpressions;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace AudioChapterSplitter
 {
@@ -94,9 +94,9 @@ namespace AudioChapterSplitter
 
         private static string GetSafeFilename(string input, int maxLength = 100, string defaultName = "unknown")
         {
-            var unicode = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(input));
+            var normalized = RemoveAccents(input);
 
-            var name = string.Join("", unicode.Split(Path.GetInvalidFileNameChars()));
+            var name = string.Join("", normalized.Split(Path.GetInvalidFileNameChars()));
 
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -104,6 +104,21 @@ namespace AudioChapterSplitter
             }
 
             return name.Length > maxLength ? name.Substring(0, maxLength) : name;
+        }
+
+        private static string RemoveAccents(string input)
+        {
+            var normalizedString = input.Normalize(NormalizationForm.FormD);
+            var stringBuilder = new StringBuilder();
+            foreach (var c in normalizedString)
+            {
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
 
         private static string GetFFMpegExecutablePath()
@@ -187,6 +202,9 @@ namespace AudioChapterSplitter
                     RedirectStandardError = true,
                     RedirectStandardInput = true,
                     CreateNoWindow = true,
+                    StandardOutputEncoding = Encoding.UTF8,
+                    StandardErrorEncoding = Encoding.UTF8,
+                    StandardInputEncoding = Encoding.UTF8,
                 },
             };
 

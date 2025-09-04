@@ -16,6 +16,25 @@
             var path = args[0];
             string? directory = args.Length > 1 ? args[1] : null;
 
+            if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+            {
+                Console.WriteLine("Mp4 file path:");
+                var input = Console.ReadLine();
+
+                if (input.StartsWith("\"") && input.EndsWith("\""))
+                {
+                    input = input[1..^1];
+                }
+
+                if (string.IsNullOrWhiteSpace(input) || !File.Exists(input))
+                {
+                    Console.WriteLine("Invalid path");
+                    return;
+                }
+
+                path = input;
+            }
+
             Console.WriteLine("(Press Ctrl+C to cancel)");
             Console.CancelKeyPress += (sender, e) =>
             {
